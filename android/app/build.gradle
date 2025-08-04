@@ -1,0 +1,98 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: "../config.gradle"
+
+android {
+    namespace = "com.views.deepseek"
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        disable "Instantiatable"
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId packagedata["applicationId"]
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode versiondata["versionCode"]
+        versionName versiondata["versionName"]
+        multiDexEnabled true
+    }
+
+    dependencies {
+        implementation 'com.android.support:multidex:1.0.3'
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so flutter run --release works.
+            signingConfig signingConfigs.debug
+            ndk{
+                abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
+            }
+            minifyEnabled false
+            shrinkResources false
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a","arm64-v8a", "x86"
+            }
+        }
+    }
+
+    applicationVariants.all {
+            variant ->
+                variant.outputs.each { output ->
+                    if (output.name == 'release') {
+                        variant.packageApplicationProvider.get().outputDirectory = new File("../apk/output/")
+                        def fileName
+                        fileName = "output.apk"
+                        output.outputFileName = fileName
+                    }
+                }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("ReleaseApkListingFileRedirect")){
+        task.enabled = false
+    }
+}

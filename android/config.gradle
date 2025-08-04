@@ -1,0 +1,15 @@
+ext {
+    versiondata = [
+            versionCode: 110,
+            versionName: "1.1.0"
+    ]
+    signdata = [
+            keyAlias     : 'upload',
+            keyPassword  : 'youyu2021',
+            storeFile    : './keystore/upload-keystore-1224.jks',
+            storePassword: 'youyu2021'
+    ]
+    packagedata = [
+            applicationId: 'com.views.deepseek'
+    ]
+}

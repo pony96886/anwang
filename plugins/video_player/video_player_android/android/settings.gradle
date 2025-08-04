@@ -1,0 +1,4 @@
+rootProject.name = 'video_player_android'
+
+include ':ijkplayer-java'
+project(':ijkplayer-java').projectDir = file(rootProject.projectDir, 'ijkplayer-java')
