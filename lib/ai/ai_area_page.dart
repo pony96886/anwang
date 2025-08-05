@@ -1,4 +1,5 @@
 import 'package:deepseek/ai/ai_girl_page.dart';
+import 'package:deepseek/ai/ai_magic_page.dart';
 import 'package:deepseek/base/base_store.dart';
 import 'package:deepseek/base/basewidget.dart';
 import 'package:deepseek/base/gen_custom_nav.dart';
@@ -123,12 +124,16 @@ class __AIAreaPageState extends BaseWidgetState<_AIAreaPage> {
                           _currentIndex = p0;
                         },
                         titles: [
+                          Utils.txt('aihh'),
+                          Utils.txt('aimf'),
                           Utils.txt('tphl'),
                           Utils.txt('sphl'),
                           Utils.txt('aity'),
                           Utils.txt('ainy'),
                         ],
                         pages: [
+                          Container(),
+                          Container(),
                           FacePicPage(
                             isShow: widget.isShow,
                           ),
