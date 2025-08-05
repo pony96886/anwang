@@ -133,7 +133,7 @@ class __AIAreaPageState extends BaseWidgetState<_AIAreaPage> {
                         ],
                         pages: [
                           Container(),
-                          Container(),
+                          AiMagicPage(),
                           FacePicPage(
                             isShow: widget.isShow,
                           ),

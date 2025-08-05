@@ -2200,6 +2200,24 @@ Future<ResponseModel<dynamic>?> reqDelMyFaces({String ids = ""}) async {
   }
 }
 
+//魔法素材列表
+Future<ResponseModel<dynamic>?> reqGetAiMagicListMaterial({
+  int page = 1,
+  int limit = 15,
+}) async {
+  try {
+    Response<dynamic> res =
+        await NetworkHttp.post('/api/aimagic/list_material', data: {
+      "page": page,
+      "limit": limit,
+    });
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
 //图片列表
 Future<ResponseModel<dynamic>?> reqGetPics({
   int cate_id = 0,
@@ -2366,13 +2384,13 @@ Future<ResponseModel<ConfigModel>?> reqConfig(BuildContext context) async {
       AppGlobal.uploadMp4Key = tp.data?.config?.upload_mp4_key ?? "";
       AppGlobal.uploadMp4Url = tp.data?.config?.mp4_upload_url ?? "";
     }
-    
+
     //seo设置
     if (kIsWeb) {
       final descTag = html.document.head!
           .querySelector('meta[name="description"]') as html.MetaElement?;
-      final kwTag = html.document.head!
-          .querySelector('meta[name="keywords"]') as html.MetaElement?;
+      final kwTag = html.document.head!.querySelector('meta[name="keywords"]')
+          as html.MetaElement?;
       if (kwTag != null && descTag != null) {
         kwTag.content = tp.data?.keywords ?? "";
         descTag.content = tp.data?.description ?? "";
