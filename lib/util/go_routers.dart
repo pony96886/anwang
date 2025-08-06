@@ -14,6 +14,7 @@ import 'package:deepseek/acgn/novel/novel_reader_page.dart';
 import 'package:deepseek/ai/ai_girl_chat_page.dart';
 import 'package:deepseek/ai/ai_girl_create_page.dart';
 import 'package:deepseek/ai/ai_girl_detail_page.dart';
+import 'package:deepseek/ai/ai_magic_details_page.dart';
 import 'package:deepseek/mine/mine_message_center.dart';
 import 'package:deepseek/mine/mine_order_page.dart';
 import 'package:deepseek/mine/mine_vip_update_page.dart';
@@ -699,6 +700,15 @@ class GoRouters {
             child: MinePurchasePage(
               index: int.parse(state.params['index'] ?? "0"),
             )),
+        routes: childTwoRouters,
+      ),
+      //AI魔法详情
+      GoRoute(
+        path: 'aimagicdetails',
+        pageBuilder: (context, state) {
+          return Utils.buildSlideTransitionPage(
+              state: state, child: AiMagicDetailsPage(material: state.extra));
+        },
         routes: childTwoRouters,
       ),
       //素材记录

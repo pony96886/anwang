@@ -166,7 +166,8 @@ class __AiMagicPageState extends BaseWidgetState<_AiMagicPage> {
                             dynamic e = array[index];
                             return InkWell(
                               onTap: () {
-                                Utils.navTo(context, "/aimagicdetails");
+                                Utils.navTo(context, "/aimagicdetails",
+                                    extra: e);
                               },
                               child: Container(
                                 height: 250.w,

@@ -2,91 +2,93 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable(explicitToJson: true)
 class UserModel {
-  UserModel({
-    this.uid,
-    this.uuid,
-    this.username,
-    this.created_at,
-    this.updated_at,
-    this.role_id,
-    this.gender,
-    this.regip,
-    this.regdate,
-    this.lastip,
-    this.expired_at,
-    this.lastpost,
-    this.oltime,
-    this.pageviews,
-    this.score,
-    this.aff,
-    this.channel,
-    this.invited_by,
-    this.invited_num,
-    this.ban_post,
-    this.post_num,
-    this.login_count,
-    this.app_version,
-    this.validate,
-    this.thumb,
-    this.coins,
-    this.money,
-    this.proxy_money,
-    this.vip_level,
-    this.auth_status,
-    this.exp,
-    this.chat_uid,
-    this.phone,
-    this.phone_prefix,
-    this.free_view_cnt,
-    this.income_money,
-    this.lastactivity,
-    this.income_total,
-    this.post_count,
-    this.topic_count,
-    this.follow_count,
-    this.tags,
-    this.fans_count,
-    this.new_user,
-    this.share,
-    this.nickname,
-    this.point,
-    this.broker_auth,
-    this.girl_auth,
-    this.unread_reply,
-    this.post_club_month,
-    this.post_club_quarter,
-    this.post_club_year,
-    this.post_club_total,
-    this.post_club_number_num,
-    this.is_fans,
-    this.post_club_id,
-    this.is_club_pop,
-    this.vip_str,
-    // this.pass,
-    this.agent,
-    this.video_download_value,
-    this.video_long_down_type,
-    this.video_long_down_value,
-    this.video_short_down_type,
-    this.video_short_down_value,
-    this.voice_down_type,
-    this.voice_down_value,
-    this.img_face_type,
-    this.img_face_value,
-    this.video_face_type,
-    this.video_face_value,
-    this.strip_type,
-    this.strip_value,
-    this.cartoon_down_type,
-    this.cartoon_down_value,
-    this.ai_girlfriend_create_type,
-    this.ai_girlfriend_create_value,
-    this.ai_girlfriend_chat_type,
-    this.ai_girlfriend_chat_value,
-    this.is_set_password,
-    this.vip_upgrade,
-    this.aw_privilege
-  });
+  UserModel(
+      {this.uid,
+      this.uuid,
+      this.username,
+      this.created_at,
+      this.updated_at,
+      this.role_id,
+      this.gender,
+      this.regip,
+      this.regdate,
+      this.lastip,
+      this.expired_at,
+      this.lastpost,
+      this.oltime,
+      this.pageviews,
+      this.score,
+      this.aff,
+      this.channel,
+      this.invited_by,
+      this.invited_num,
+      this.ban_post,
+      this.post_num,
+      this.login_count,
+      this.app_version,
+      this.validate,
+      this.thumb,
+      this.coins,
+      this.money,
+      this.proxy_money,
+      this.vip_level,
+      this.auth_status,
+      this.exp,
+      this.chat_uid,
+      this.phone,
+      this.phone_prefix,
+      this.free_view_cnt,
+      this.income_money,
+      this.lastactivity,
+      this.income_total,
+      this.post_count,
+      this.topic_count,
+      this.follow_count,
+      this.tags,
+      this.fans_count,
+      this.new_user,
+      this.share,
+      this.nickname,
+      this.point,
+      this.broker_auth,
+      this.girl_auth,
+      this.unread_reply,
+      this.post_club_month,
+      this.post_club_quarter,
+      this.post_club_year,
+      this.post_club_total,
+      this.post_club_number_num,
+      this.is_fans,
+      this.post_club_id,
+      this.is_club_pop,
+      this.vip_str,
+      // this.pass,
+      this.agent,
+      this.video_download_value,
+      this.video_long_down_type,
+      this.video_long_down_value,
+      this.video_short_down_type,
+      this.video_short_down_value,
+      this.voice_down_type,
+      this.voice_down_value,
+      this.img_face_type,
+      this.img_face_value,
+      this.video_face_type,
+      this.video_face_value,
+      this.strip_type,
+      this.strip_value,
+      this.cartoon_down_type,
+      this.cartoon_down_value,
+      this.ai_girlfriend_create_type,
+      this.ai_girlfriend_create_value,
+      this.ai_girlfriend_chat_type,
+      this.ai_girlfriend_chat_value,
+      this.is_set_password,
+      this.vip_upgrade,
+      this.aw_privilege,
+      this.ai_magic_value,
+      this.ai_magic_type});
+
   int? aw_privilege;
   int? vip_upgrade;
   String? vip_str;
@@ -100,6 +102,7 @@ class UserModel {
   String? updated_at;
   int? role_id;
   int? gender;
+
   // int? pass;
   int? video_download_value;
 
@@ -171,10 +174,14 @@ class UserModel {
   int? post_club_number_num;
   int? is_club_pop;
   int? agent;
+  int? ai_magic_value;
+  int? ai_magic_type;
 
   ShareModel? share;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        ai_magic_value: json['ai_magic_value'] ?? 0,
+        ai_magic_type: json['ai_magic_type'] ?? 0,
         aw_privilege: json['aw_privilege'] ?? 0,
         vip_upgrade: json['vip_upgrade'] ?? 0,
         post_club_id: json['post_club_id'] ?? 0,
@@ -350,6 +357,7 @@ class UserModel {
 @JsonSerializable(explicitToJson: true)
 class ShareModel {
   ShareModel({this.aff_code, this.share_url, this.share_text});
+
   String? aff_code;
   String? share_url;
   String? share_text;
@@ -359,6 +367,7 @@ class ShareModel {
         share_url: json['share_url'] ?? "",
         share_text: json['share_text'] ?? "",
       );
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         "aff_code": aff_code,
         "share_url": share_url,
@@ -382,6 +391,7 @@ class ActivityModel {
         ad1: json['ad1'],
         ad2: json['ad2'],
       );
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         "ad_big": ad_big,
         "ad1": ad1,
