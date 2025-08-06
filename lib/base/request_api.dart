@@ -2218,6 +2218,24 @@ Future<ResponseModel<dynamic>?> reqGetAiMagicListMaterial({
   }
 }
 
+//魔法素材列表
+Future<ResponseModel<dynamic>?> reqGenerateVideo(
+    int material_id, String thumb, int thumb_w, int thumb_h) async {
+  try {
+    Response<dynamic> res =
+        await NetworkHttp.post('/api/aimagic/generate_video', data: {
+      "material_id": material_id,
+      "thumb": thumb,
+      "thumb_w": "$thumb_w",
+      "thumb_h": "$thumb_h",
+    });
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
 //图片列表
 Future<ResponseModel<dynamic>?> reqGetPics({
   int cate_id = 0,

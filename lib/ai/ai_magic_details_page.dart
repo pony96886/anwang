@@ -51,6 +51,9 @@ class _AiMagicDetailsPage extends BaseWidget {
 }
 
 class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
+  final ImagePicker _picker = ImagePicker();
+  Function(int, String, int, int)? fun;
+
   @override
   void didUpdateWidget(covariant _AiMagicDetailsPage oldWidget) {
     // TODO: implement didUpdateWidget
@@ -76,6 +79,297 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+  }
+
+  Future<void> imagePickerAssets(int type) async {
+    final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      bool flag = await Utils.pngLimitSize(file);
+      if (flag) return;
+      uploadFileImg(file, type);
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  void uploadFileImg(XFile? file, int type) async {
+    Utils.startGif(tip: Utils.txt('scz'));
+    var data;
+    if (kIsWeb) {
+      data = await NetworkHttp.xfileHtmlUploadImage(
+          file: file, position: 'upload');
+    } else {
+      data = await NetworkHttp.xfileUploadImage(file: file, position: 'upload');
+    }
+    Utils.closeGif();
+    if (data['code'] == 1) {
+      var image = ImgLib.decodeImage(await file?.readAsBytes() ?? []);
+      String url = data['msg'].toString();
+      int w = image?.width ?? 100;
+      int h = image?.height ?? 100;
+      fun?.call(type, url, w, h);
+    } else {
+      Utils.showText(data['msg'] ?? "failed");
+    }
+  }
+
+  void showSheetAlert({
+    Function(int, Function(int, String, int, int))? imgfun,
+    Function(List<Map>, int money, int faceValue)? okfun,
+  }) {
+    int coins = Provider.of<BaseStore>(context, listen: false)
+            .conf
+            ?.config
+            ?.img_coins ??
+        0;
+    UserModel? user = Provider.of<BaseStore>(context, listen: false).user;
+    int money = user?.money ?? 0;
+    int remainMagicValue = user?.ai_magic_value ?? 0;
+    String btnTxt = remainMagicValue > 0
+        ? Utils.txt('ljscsyac').replaceAll('aa', '$remainMagicValue')
+        : Utils.txt('ddjs')
+            .replaceAll("00", coins.toString())
+            .replaceAll("##", money.toString());
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          String modulURL = "";
+          int moduleW = 0;
+          int moduleH = 0;
+          String picURL = "";
+          int picW = 0;
+          int picH = 0;
+          return StatefulBuilder(builder: (context, setBottomSheetState) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: StyleTheme.margin),
+              decoration: BoxDecoration(
+                color: Color(0xFF161622),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10.w),
+                    topLeft: Radius.circular(10.w)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 8.w),
+                  Text(
+                    Utils.txt("srhffm"),
+                    style: TextStyle(
+                        color: Color(0xffd8d8d8),
+                        fontSize: 15.w,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 3.w),
+                  Text(
+                    Utils.txt("rlscsl"),
+                    style: TextStyle(
+                        color: Color(0xffd8d8d899).withOpacity(.6),
+                        fontSize: 15.w),
+                  ),
+                  SizedBox(height: 25.w),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          LocalPNG(
+                            name: "ai_magic_tip_1",
+                            width: 79.w,
+                            height: 105.3.w,
+                          ),
+                          SizedBox(
+                            height: 5.8.w,
+                          ),
+                          Text(
+                            Utils.txt("jsz"),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13.w),
+                          ),
+                          SizedBox(
+                            height: 4.w,
+                          ),
+                          LocalPNG(
+                            name: "ai_magic_tip_success",
+                            width: 14.w,
+                            height: 14.w,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          LocalPNG(
+                            name: "ai_magic_tip_2",
+                            width: 79.w,
+                            height: 105.3.w,
+                          ),
+                          SizedBox(
+                            height: 5.8.w,
+                          ),
+                          Text(
+                            Utils.txt("ssyzd"),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13.w),
+                          ),
+                          SizedBox(
+                            height: 4.w,
+                          ),
+                          LocalPNG(
+                            name: "ai_magic_tip_error",
+                            width: 14.w,
+                            height: 14.w,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          LocalPNG(
+                            name: "ai_magic_tip_3",
+                            width: 79.w,
+                            height: 105.3.w,
+                          ),
+                          SizedBox(
+                            height: 5.8.w,
+                          ),
+                          Text(
+                            Utils.txt("bszm"),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13.w),
+                          ),
+                          SizedBox(
+                            height: 4.w,
+                          ),
+                          LocalPNG(
+                            name: "ai_magic_tip_error",
+                            width: 14.w,
+                            height: 14.w,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          LocalPNG(
+                            name: "ai_magic_tip_4",
+                            width: 79.w,
+                            height: 105.3.w,
+                          ),
+                          SizedBox(
+                            height: 5.8.w,
+                          ),
+                          Text(
+                            Utils.txt("gymh"),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13.w),
+                          ),
+                          SizedBox(
+                            height: 4.w,
+                          ),
+                          LocalPNG(
+                            name: "ai_magic_tip_error",
+                            width: 14.w,
+                            height: 14.w,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 25.w),
+                  SizedBox(
+                    height: 45.w,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // int mon = Provider.of<BaseStore>(context, listen: false)
+                        //         .user
+                        //         ?.money ??
+                        //     0;
+                        // int magicValue =
+                        //     Provider.of<BaseStore>(context, listen: false)
+                        //             .user
+                        //             ?.ai_magic_value ??
+                        //         0;
+                        //
+                        // if (mon - coins < 0 && magicValue <= 0) {
+                        //   Navigator.of(context).pop();
+                        //   Utils.navTo(context, "/minegoldcenterpage");
+                        //   return;
+                        // }
+                        //
+                        // if (magicValue > 0) {
+                        //   // 有次数不扣金币
+                        //   magicValue = magicValue - 1;
+                        // } else {
+                        //   mon = mon - coins;
+                        // }
+
+                        fun = (t, x, w, h) {
+                          if (t == 1) return;
+                          Utils.startGif(tip: Utils.txt('tjz'));
+
+                          reqGenerateVideo(widget.material['id'], x, w, h)
+                              .then((val) {
+                            Utils.closeGif();
+                            if (val == null) {
+                              Utils.showText("网络异常，请稍后再试");
+                              return;
+                            }
+                            if (val!.status != 1) {
+                              Utils.showText(val.msg!);
+                            } else {
+                              Utils.showText("提交成功");
+                              Navigator.of(context).pop();
+                            }
+                          });
+                        };
+                        imagePickerAssets(0);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFF579bf1),
+                              Color(0xFF3D54F5),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(45.w),
+                        ),
+                        child: Text(
+                          btnTxt,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.w,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 14.w),
+                  Text(
+                    Utils.txt("storage_tip"),
+                    style: TextStyle(
+                        color: Color(0xffffffff99).withOpacity(.6),
+                        fontSize: 12.w),
+                  ),
+                  SizedBox(height: 16.w),
+                ],
+              ),
+            );
+          });
+        });
   }
 
   @override
@@ -178,7 +472,9 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
           height: 45.w,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showSheetAlert();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
