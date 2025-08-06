@@ -14,11 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-enum MediaType {
-  pic,
-  video,
-  strip,
-}
+enum MediaType { pic, video, strip, aiMagic, aiPainting }
 
 class MinePurchasePage extends BaseWidget {
   MinePurchasePage({Key? key, this.index = 0}) : super(key: key);
@@ -67,11 +63,15 @@ class _MinePurchasePageState extends BaseWidgetState<MinePurchasePage> {
               // lineColor: const Color.fromRGBO(241, 241, 241, 0.5),
               // type: GenCustomNavType.dotline,
               titles: [
+                Utils.txt('aihh'),
+                Utils.txt('aimf'),
                 Utils.txt('tphl'),
                 Utils.txt('sphl'),
                 Utils.txt('aity'),
               ],
               pages: [
+                PurchaseStatusPage(type: MediaType.aiPainting),
+                PurchaseStatusPage(type: MediaType.aiMagic),
                 PurchaseStatusPage(type: MediaType.pic),
                 PurchaseStatusPage(type: MediaType.video),
                 PurchaseStatusPage(type: MediaType.strip),
@@ -304,8 +304,9 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                           : 0,
                                       isEdit: isEdit,
                                       isSelect: delids.contains(e["id"]),
-                                      isLongPress: e["status"] == 2 ||
-                                          e["status"] == 3, //成功或失败才允许删除操作
+                                      isLongPress:
+                                          e["status"] == 2 || e["status"] == 3,
+                                      //成功或失败才允许删除操作
                                       okfun: (x, f) {
                                         if (f) {
                                           //增加选中
