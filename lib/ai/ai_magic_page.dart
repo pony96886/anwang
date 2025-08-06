@@ -39,12 +39,12 @@ class _AiMagicPage extends BaseWidget {
   @override
   State<StatefulWidget> cState() {
     // TODO: implement cState
-    return __FacePicPageState();
+    return __AiMagicPageState();
   }
 }
 
-class __FacePicPageState extends BaseWidgetState<_AiMagicPage> {
-  bool isHud = false;
+class __AiMagicPageState extends BaseWidgetState<_AiMagicPage> {
+  bool isHud = true;
   int page = 1;
   bool netError = false;
   bool noMore = false;
@@ -119,13 +119,13 @@ class __FacePicPageState extends BaseWidgetState<_AiMagicPage> {
 
   @override
   Widget pageBody(BuildContext context) {
-    return netError
-        ? LoadStatus.netError(onTap: () {
-            netError = false;
-            getData();
-          })
-        : isHud
-            ? LoadStatus.showLoading(mounted)
+    return isHud
+        ? LoadStatus.showLoading(mounted)
+        : netError
+            ? LoadStatus.netError(onTap: () {
+                netError = false;
+                getData();
+              })
             : array.isEmpty
                 ? LoadStatus.noData()
                 : NestedScrollView(
@@ -164,37 +164,43 @@ class __FacePicPageState extends BaseWidgetState<_AiMagicPage> {
                           crossAxisSpacing: 10.w,
                           itemBuilder: (cx, index) {
                             dynamic e = array[index];
-                            return Container(
-                              height: 250.w,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF00000032).withOpacity(.2),
-                                borderRadius: BorderRadius.circular(6.w),
-                              ),
-                              child: Stack(
-                                children: [
-                                  if (e["cover"] != "")
-                                    ImageNetTool(
-                                      url: e["cover"],
-                                      radius: BorderRadius.all(
-                                          Radius.circular(6.w)),
-                                    ),
-                                  Align(
-                                    child: Text(
-                                      e['title'],
-                                      style: TextStyle(
-                                        fontSize: 24.w,
-                                        fontWeight: FontWeight.w600,
-                                        shadows: const [
-                                          Shadow(
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2,
-                                            color: Color.fromRGBO(0, 0, 0, 0.5),
-                                          ),
-                                        ],
+                            return InkWell(
+                              onTap: () {
+                                Utils.navTo(context, "/aimagicdetails");
+                              },
+                              child: Container(
+                                height: 250.w,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF00000032).withOpacity(.2),
+                                  borderRadius: BorderRadius.circular(6.w),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    if (e["cover"] != "")
+                                      ImageNetTool(
+                                        url: e["cover"],
+                                        radius: BorderRadius.all(
+                                            Radius.circular(6.w)),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    Align(
+                                      child: Text(
+                                        e['title'],
+                                        style: TextStyle(
+                                          fontSize: 24.w,
+                                          fontWeight: FontWeight.w600,
+                                          shadows: const [
+                                            Shadow(
+                                              offset: Offset(0, 1),
+                                              blurRadius: 2,
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           }),
