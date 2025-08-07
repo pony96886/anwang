@@ -52,7 +52,10 @@ class _AiMagicDetailsPage extends BaseWidget {
 
 class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
   final ImagePicker _picker = ImagePicker();
-  Function(int, String, int, int)? fun;
+
+  String picURL = "";
+  int picW = 0;
+  int picH = 0;
 
   @override
   void didUpdateWidget(covariant _AiMagicDetailsPage oldWidget) {
@@ -68,7 +71,7 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
       rightW: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          Utils.navTo(context, "/minepurchasepage/0");
+          showSheetAlert();
         },
         child: Text(Utils.txt('gz'), style: StyleTheme.font_black_7716_14),
       ),
@@ -107,7 +110,10 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
       String url = data['msg'].toString();
       int w = image?.width ?? 100;
       int h = image?.height ?? 100;
-      fun?.call(type, url, w, h);
+      picURL = url;
+      picW = w;
+      picH = h;
+      setState(() {});
     } else {
       Utils.showText(data['msg'] ?? "failed");
     }
@@ -117,30 +123,11 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
     Function(int, Function(int, String, int, int))? imgfun,
     Function(List<Map>, int money, int faceValue)? okfun,
   }) {
-    int coins = Provider.of<BaseStore>(context, listen: false)
-            .conf
-            ?.config
-            ?.img_coins ??
-        0;
-    UserModel? user = Provider.of<BaseStore>(context, listen: false).user;
-    int money = user?.money ?? 0;
-    int remainMagicValue = user?.ai_magic_value ?? 0;
-    String btnTxt = remainMagicValue > 0
-        ? Utils.txt('ljscsyac').replaceAll('aa', '$remainMagicValue')
-        : Utils.txt('ddjs')
-            .replaceAll("00", coins.toString())
-            .replaceAll("##", money.toString());
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
-          String modulURL = "";
-          int moduleW = 0;
-          int moduleH = 0;
-          String picURL = "";
-          int picW = 0;
-          int picH = 0;
           return StatefulBuilder(builder: (context, setBottomSheetState) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: StyleTheme.margin),
@@ -281,49 +268,8 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        int mon = Provider.of<BaseStore>(context, listen: false)
-                                .user
-                                ?.money ??
-                            0;
-                        int magicValue =
-                            Provider.of<BaseStore>(context, listen: false)
-                                    .user
-                                    ?.ai_magic_value ??
-                                0;
-
-                        if (mon - coins < 0 && magicValue <= 0) {
-                          Navigator.of(context).pop();
-                          Utils.navTo(context, "/minegoldcenterpage");
-                          return;
-                        }
-
-                        if (magicValue > 0) {
-                          // 有次数不扣金币
-                          magicValue = magicValue - 1;
-                        } else {
-                          mon = mon - coins;
-                        }
-
-                        fun = (t, x, w, h) {
-                          if (t == 1) return;
-                          Utils.startGif(tip: Utils.txt('tjz'));
-
-                          reqGenerateVideo(widget.material['id'], x, w, h)
-                              .then((val) {
-                            Utils.closeGif();
-                            if (val == null) {
-                              Utils.showText("网络异常，请稍后再试");
-                              return;
-                            }
-                            if (val!.status != 1) {
-                              Utils.showText(val.msg!);
-                            } else {
-                              Utils.showText("提交成功");
-                              Navigator.of(context).pop();
-                            }
-                          });
-                        };
                         imagePickerAssets(0);
+                        Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
@@ -347,7 +293,7 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
                           borderRadius: BorderRadius.circular(45.w),
                         ),
                         child: Text(
-                          btnTxt,
+                          Utils.txt("xcxz"),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.w,
@@ -435,33 +381,64 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
               Row(
                 children: [
                   Container(
-                    width: 100.w,
-                    height: 100.w,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFffffff0c).withOpacity(.05),
-                      borderRadius: BorderRadius.circular(5.w),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        LocalPNG(
-                          name: "ai_magic_upload",
-                          width: 35.w,
-                          height: 35.w,
-                        ),
-                        SizedBox(
-                          height: 4.5.w,
-                        ),
-                        Text(
-                          Utils.txt("djsc"),
-                          style: TextStyle(
-                              color: Color(0xFFffffffcc).withOpacity(.8),
-                              fontSize: 12.w),
-                        )
-                      ],
-                    ),
-                  )
+                      width: 100.w,
+                      height: 100.w,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFffffff0c).withOpacity(.05),
+                        borderRadius: BorderRadius.circular(5.w),
+                      ),
+                      child: picURL.isEmpty
+                          ? GestureDetector(
+                              onTap: () {
+                                imagePickerAssets(0);
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  LocalPNG(
+                                    name: "ai_magic_upload",
+                                    width: 35.w,
+                                    height: 35.w,
+                                  ),
+                                  SizedBox(
+                                    height: 4.5.w,
+                                  ),
+                                  Text(
+                                    Utils.txt("djsc"),
+                                    style: TextStyle(
+                                        color:
+                                            Color(0xFFffffffcc).withOpacity(.8),
+                                        fontSize: 12.w),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Stack(
+                              children: [
+                                Center(
+                                    child: ImageNetTool(
+                                        url: AppGlobal.imgBaseUrl + picURL,
+                                        fit: BoxFit.contain)),
+                                Positioned(
+                                  right: 5.w,
+                                  top: 5.w,
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () {
+                                      picURL = "";
+                                      picH = 0;
+                                      picW = 0;
+                                      if (mounted) setState(() {});
+                                    },
+                                    child: LocalPNG(
+                                        name: "ai_post_delete",
+                                        width: 15.w,
+                                        height: 15.w),
+                                  ),
+                                )
+                              ],
+                            ))
                 ],
               )
             ],
@@ -473,7 +450,41 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              showSheetAlert();
+              int mon =
+                  Provider.of<BaseStore>(context, listen: false).user?.money ??
+                      0;
+              int magicValue = Provider.of<BaseStore>(context, listen: false)
+                      .user
+                      ?.ai_magic_value ??
+                  0;
+
+              if (mon - coins < 0 && magicValue <= 0) {
+                Utils.navTo(context, "/minegoldcenterpage");
+                return;
+              }
+
+              if (magicValue > 0) {
+                // 有次数不扣金币
+                magicValue = magicValue - 1;
+              } else {
+                mon = mon - coins;
+              }
+
+              Utils.startGif(tip: Utils.txt('jsz'));
+              reqGenerateVideo(widget.material['id'], picURL, picW, picH)
+                  .then((val) {
+                Utils.closeGif();
+                if (val == null) {
+                  Utils.showText("网络异常，请稍后再试");
+                  return;
+                }
+                if (val!.status != 1) {
+                  Utils.showText(val.msg!);
+                } else {
+                  Utils.showText("提交成功");
+                  Navigator.of(context).pop();
+                }
+              });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
