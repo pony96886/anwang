@@ -87,7 +87,9 @@ class UserModel {
       this.vip_upgrade,
       this.aw_privilege,
       this.ai_magic_value,
-      this.ai_magic_type});
+      this.ai_magic_type,
+      this.ai_draw_type,
+      this.ai_draw_value});
 
   int? aw_privilege;
   int? vip_upgrade;
@@ -176,12 +178,16 @@ class UserModel {
   int? agent;
   int? ai_magic_value;
   int? ai_magic_type;
+  int? ai_draw_value;
+  int? ai_draw_type;
 
   ShareModel? share;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         ai_magic_value: json['ai_magic_value'] ?? 0,
         ai_magic_type: json['ai_magic_type'] ?? 0,
+        ai_draw_value: json['ai_draw_value'] ?? 0,
+        ai_draw_type: json['ai_draw_type'] ?? 0,
         aw_privilege: json['aw_privilege'] ?? 0,
         vip_upgrade: json['vip_upgrade'] ?? 0,
         post_club_id: json['post_club_id'] ?? 0,

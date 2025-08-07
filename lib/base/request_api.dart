@@ -2233,6 +2233,18 @@ Future<ResponseModel<dynamic>?> reqDelMyFaces({String ids = ""}) async {
   }
 }
 
+//AI绘画表单
+Future<ResponseModel<dynamic>?> reqGetAidrawListFormElement() async {
+  try {
+    Response<dynamic> res =
+        await NetworkHttp.post('/api/aidraw/list_form_element', data: {});
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
 //魔法素材列表
 Future<ResponseModel<dynamic>?> reqGetAiMagicListMaterial({
   int page = 1,
