@@ -281,28 +281,28 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // int mon = Provider.of<BaseStore>(context, listen: false)
-                        //         .user
-                        //         ?.money ??
-                        //     0;
-                        // int magicValue =
-                        //     Provider.of<BaseStore>(context, listen: false)
-                        //             .user
-                        //             ?.ai_magic_value ??
-                        //         0;
-                        //
-                        // if (mon - coins < 0 && magicValue <= 0) {
-                        //   Navigator.of(context).pop();
-                        //   Utils.navTo(context, "/minegoldcenterpage");
-                        //   return;
-                        // }
-                        //
-                        // if (magicValue > 0) {
-                        //   // 有次数不扣金币
-                        //   magicValue = magicValue - 1;
-                        // } else {
-                        //   mon = mon - coins;
-                        // }
+                        int mon = Provider.of<BaseStore>(context, listen: false)
+                                .user
+                                ?.money ??
+                            0;
+                        int magicValue =
+                            Provider.of<BaseStore>(context, listen: false)
+                                    .user
+                                    ?.ai_magic_value ??
+                                0;
+
+                        if (mon - coins < 0 && magicValue <= 0) {
+                          Navigator.of(context).pop();
+                          Utils.navTo(context, "/minegoldcenterpage");
+                          return;
+                        }
+
+                        if (magicValue > 0) {
+                          // 有次数不扣金币
+                          magicValue = magicValue - 1;
+                        } else {
+                          mon = mon - coins;
+                        }
 
                         fun = (t, x, w, h) {
                           if (t == 1) return;
