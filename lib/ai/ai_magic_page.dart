@@ -71,7 +71,7 @@ class __AiMagicPageState extends BaseWidgetState<_AiMagicPage> {
       rightW: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          Utils.navTo(context, "/minepurchasepage/0");
+          Utils.navTo(context, "/minepurchasepage/1");
         },
         child: Text(Utils.txt('record'), style: StyleTheme.font_black_7716_14),
       ),

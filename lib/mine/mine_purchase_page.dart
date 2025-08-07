@@ -189,6 +189,9 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
       case MediaType.strip:
         value = await reqMyStrip(page: page, status: widget.status);
         break;
+      case MediaType.aiMagic:
+        value = await reqMyAimagicVideo(page: page, status: widget.status);
+        break;
       default:
     }
     if (value?.data == null) {
@@ -223,6 +226,9 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
         break;
       case MediaType.strip:
         value = await reqDelMyStrip(ids: delids.join(","));
+        break;
+      case MediaType.aiMagic:
+        value = await reqDelMyAimagic(ids: delids.join(","));
         break;
       default:
     }
@@ -299,7 +305,8 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                     return Utils.materialDealUI(
                                       context,
                                       e,
-                                      type: widget.type == MediaType.video
+                                      type: widget.type == MediaType.video ||
+                                              widget.type == MediaType.aiMagic
                                           ? 1
                                           : 0,
                                       isEdit: isEdit,
@@ -349,6 +356,12 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                               jsonEncode(picMap));
                                           Utils.navTo(
                                               context, '/previewviewpage/$url');
+                                          return;
+                                        }
+                                        if (x == 2 &&
+                                            widget.type == MediaType.aiMagic) {
+                                          Utils.navTo(context,
+                                              "/unplayerpage/${Uri.encodeComponent(e["cover"])}/${Uri.encodeComponent(e["thumb"])}");
                                           return;
                                         }
                                       },
