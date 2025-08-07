@@ -377,7 +377,7 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
     int coins = Provider.of<BaseStore>(context, listen: false)
             .conf
             ?.config
-            ?.img_coins ??
+            ?.video_coins ??
         0;
     UserModel? user = Provider.of<BaseStore>(context, listen: false).user;
     int money = user?.money ?? 0;
