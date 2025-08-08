@@ -478,10 +478,10 @@ class __AiMagicDetailsPageState extends BaseWidgetState<_AiMagicDetailsPage> {
                   Utils.showText("网络异常，请稍后再试");
                   return;
                 }
-                if (val!.status != 1) {
-                  Utils.showText(val.msg!);
+
+                Utils.showText(val.msg!);
+                if (val.status != 1) {
                 } else {
-                  Utils.showText("提交成功");
                   Navigator.of(context).pop();
                 }
               });
