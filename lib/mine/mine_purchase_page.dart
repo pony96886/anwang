@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-enum MediaType { pic, video, strip, aiMagic, aiPainting }
+enum MediaType { pic, video, strip, aiMagic, aiDraw }
 
 class MinePurchasePage extends BaseWidget {
   MinePurchasePage({Key? key, this.index = 0}) : super(key: key);
@@ -70,7 +70,7 @@ class _MinePurchasePageState extends BaseWidgetState<MinePurchasePage> {
                 Utils.txt('aity'),
               ],
               pages: [
-                PurchaseStatusPage(type: MediaType.aiPainting),
+                PurchaseStatusPage(type: MediaType.aiDraw),
                 PurchaseStatusPage(type: MediaType.aiMagic),
                 PurchaseStatusPage(type: MediaType.pic),
                 PurchaseStatusPage(type: MediaType.video),
@@ -121,7 +121,7 @@ class _PurchaseStatusPageState extends State<PurchaseStatusPage> {
   Widget build(BuildContext context) {
     return GenCustomNav(
       type: GenCustomNavType.none,
-      titles: widget.type == MediaType.video
+      titles: widget.type == MediaType.video || widget.type == MediaType.aiMagic
           ? [
               Utils.txt('ysj'),
               Utils.txt('pdz'),
@@ -135,7 +135,7 @@ class _PurchaseStatusPageState extends State<PurchaseStatusPage> {
               Utils.txt('shzt'),
               Utils.txt('qbtw'),
             ],
-      pages: widget.type == MediaType.video
+      pages: widget.type == MediaType.video || widget.type == MediaType.aiMagic
           ? [
               PurchaseChildPage(type: widget.type, status: 2),
               PurchaseChildPage(type: widget.type, status: 0),
@@ -192,6 +192,9 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
       case MediaType.aiMagic:
         value = await reqMyAimagicVideo(page: page, status: widget.status);
         break;
+      case MediaType.aiDraw:
+        value = await reqMyAiDrawImage(page: page, status: widget.status);
+        break;
       default:
     }
     if (value?.data == null) {
@@ -229,6 +232,9 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
         break;
       case MediaType.aiMagic:
         value = await reqDelMyAimagic(ids: delids.join(","));
+        break;
+      case MediaType.aiMagic:
+        value = await reqDelMyAiDraw(ids: delids.join(","));
         break;
       default:
     }

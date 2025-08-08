@@ -2145,11 +2145,44 @@ Future<ResponseModel<dynamic>?> reqMyAimagicVideo({
   }
 }
 
+//我的生成绘画
+Future<ResponseModel<dynamic>?> reqMyAiDrawImage({
+  int status = 0,
+  int page = 1,
+  int limit = 15,
+}) async {
+  try {
+    Response<dynamic> res =
+        await NetworkHttp.post('/api/aidraw/my_generate_image', data: {
+      "status": status,
+      "page": page,
+      "limit": limit,
+    });
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
 //删除生成的视频记录
 Future<ResponseModel<dynamic>?> reqDelMyAimagic({String ids = ""}) async {
   try {
     Response<dynamic> res = await NetworkHttp.post(
         '/api/aimagic/del_generate_video',
+        data: {"ids": ids});
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
+// 删除我的绘画记录
+Future<ResponseModel<dynamic>?> reqDelMyAiDraw({String ids = ""}) async {
+  try {
+    Response<dynamic> res = await NetworkHttp.post(
+        '/api/aidraw/del_generate_image',
         data: {"ids": ids});
 
     return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
