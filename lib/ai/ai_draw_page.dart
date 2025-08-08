@@ -46,8 +46,7 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
   dynamic data;
   List<dynamic> formItems = [];
 
-  dynamic promptData = {};
-  dynamic otherData = {};
+  dynamic formData = {};
 
   @override
   void didUpdateWidget(covariant _AiDrawPage oldWidget) {
@@ -143,8 +142,7 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                           controller: _tabController,
                           onTap: (index) {
                             setState(() {
-                              promptData = {};
-                              otherData = {};
+                              formData = {};
                               formItems = data[[
                                 'label_mode_form',
                                 'expert_mode_form'
@@ -196,7 +194,53 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // showSheetAlert();
+                        int mon = Provider.of<BaseStore>(context, listen: false)
+                                .user
+                                ?.money ??
+                            0;
+                        int magicValue =
+                            Provider.of<BaseStore>(context, listen: false)
+                                    .user
+                                    ?.ai_draw_value ??
+                                0;
+
+                        if (mon - coins < 0 && magicValue <= 0) {
+                          Utils.navTo(context, "/minegoldcenterpage");
+                          return;
+                        }
+
+                        if (magicValue > 0) {
+                          // 有次数不扣金币
+                          magicValue = magicValue - 1;
+                        } else {
+                          mon = mon - coins;
+                        }
+
+                        Utils.startGif(tip: Utils.txt('scz'));
+                        dynamic data = {};
+                        formData.forEach((key, value) {
+                          if (value is Map) {
+                            // 取子项的所有值并用 , 拼接
+                            data[key] = value.values.join(",");
+                          } else {
+                            // 如果不是 Map，直接转字符串
+                            data[key] = value.toString();
+                          }
+                        });
+                        reqGenerateImage(data).then((val) {
+                          Utils.closeGif();
+                          if (val == null) {
+                            Utils.showText("网络异常，请稍后再试");
+                            return;
+                          }
+                          Utils.showText(val.msg!);
+
+                          if (val.status != 1) {
+                          } else {
+                            formData = {};
+                            setState(() {});
+                          }
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
@@ -268,25 +312,17 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
         spacing: spacing,
         runSpacing: spacing,
         children: tags.map((tag) {
-          bool isSelected = tag['key'] == 'prompt'
-              ? promptData[form['id']] == tag['val']
-              : otherData[tag['key']] == tag['val'];
-          ;
+          if (formData[tag['key']] == null) {
+            formData[tag['key']] = {};
+          }
+          bool isSelected = formData[tag['key']][form['id']] == tag['val'];
           return GestureDetector(
             onTap: () {
               if (form['layout_type'] != 2) {
-                if (tag['key'] == 'prompt') {
-                  if (promptData[form['id']] == tag['val']) {
-                    promptData.remove(form['id']);
-                  } else {
-                    promptData[form['id']] = tag['val'];
-                  }
+                if (formData[tag['key']][form['id']] == tag['val']) {
+                  formData[tag['key']][form['id']].remove(form['id']);
                 } else {
-                  if (otherData[tag['key']] == tag['val']) {
-                    otherData.remove(tag['key']);
-                  } else {
-                    otherData[tag['key']] = tag['val'];
-                  }
+                  formData[tag['key']][form['id']] = tag['val'];
                 }
               }
 
@@ -360,12 +396,11 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                               child: TextField(
                                 maxLines: null,
                                 minLines: 3,
+                                controller: TextEditingController(
+                                    text:
+                                        formData[tag['key']][tag['id']] ?? ''),
                                 onChanged: (value) {
-                                  if (tag['key'] == 'prompt') {
-                                    promptData[tag['id']] = value;
-                                  } else {
-                                    otherData[tag['key']] = value;
-                                  }
+                                  formData[tag['key']][tag['id']] = value;
                                   setState(() {});
                                 },
                                 keyboardType: TextInputType.multiline,

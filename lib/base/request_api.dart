@@ -2263,6 +2263,18 @@ Future<ResponseModel<dynamic>?> reqGetAiMagicListMaterial({
   }
 }
 
+//开始绘画
+Future<ResponseModel<dynamic>?> reqGenerateImage(dynamic data) async {
+  try {
+    Response<dynamic> res =
+        await NetworkHttp.post('/api/aidraw/generate_image', data: data);
+
+    return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+  } catch (e) {
+    return null;
+  }
+}
+
 //魔法素材列表
 Future<ResponseModel<dynamic>?> reqGenerateVideo(
     int material_id, String thumb, int thumb_w, int thumb_h) async {
