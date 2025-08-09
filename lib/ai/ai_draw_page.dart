@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deepseek/base/base_store.dart';
 import 'package:deepseek/base/basewidget.dart';
+import 'package:deepseek/base/gen_custom_nav.dart';
 import 'package:deepseek/base/request_api.dart';
 import 'package:deepseek/model/user_model.dart';
 import 'package:deepseek/util/load_status.dart';
@@ -44,7 +45,6 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
   late TabController _tabController;
 
   dynamic data;
-  List<dynamic> formItems = [];
 
   dynamic formData = {};
 
@@ -98,8 +98,7 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
         return false;
       }
       data = value?.data;
-      formItems = value
-          ?.data[['label_mode_form', 'expert_mode_form'][_tabController.index]];
+
       isHud = false;
       if (mounted) setState(() {});
       return noMore;
@@ -130,62 +129,86 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                 getData();
               })
             : Scaffold(
-                backgroundColor: Color(0xff0b0a21),
-                body: NestedScrollView(
-                  headerSliverBuilder: (cx, flag) {
-                    return [
-                      SliverAppBar(
-                        pinned: true,
-                        backgroundColor: Color(0xff0b0a21),
-                        toolbarHeight: 40.w,
-                        title: TabBar(
-                          controller: _tabController,
-                          onTap: (index) {
-                            setState(() {
-                              formData = {};
-                              formItems = data[[
-                                'label_mode_form',
-                                'expert_mode_form'
-                              ][index]];
-                            });
-                          },
-                          tabs: [
-                            Tab(text: Utils.txt("bqms")),
-                            Tab(text: Utils.txt("zjms")),
-                          ],
-                          labelStyle: TextStyle(
-                              fontSize: 14.w,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF40a5fe)),
-                          unselectedLabelStyle: TextStyle(
-                              fontSize: 14.w,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFffffff).withOpacity(.8)),
-                          dividerColor: Colors.transparent,
-                          indicatorColor: Colors.transparent,
-                          physics: const BouncingScrollPhysics(),
-                        ),
-                      ),
-                    ];
-                  },
-                  body: PullRefresh(
-                    onRefresh: () {
-                      return getData();
+                body: GenCustomNav(
+                    type: GenCustomNavType.none,
+                    titles: [Utils.txt("bqms"), Utils.txt("zjms")],
+                    isCenter: true,
+                    inedxFunc: (index) {
+                      setState(() {
+                        formData = {};
+                      });
                     },
-                    child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.w, vertical: 20.w),
-                        itemCount: formItems.length,
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: 18.5.w);
-                        },
-                        itemBuilder: (cx, index) {
-                          dynamic e = formItems[index];
-                          return _getFormItem(e);
-                        }),
-                  ),
-                ),
+                    pages: ['label_mode_form', 'expert_mode_form']
+                        .map((k) => ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15.w, vertical: 20.w),
+                            itemCount: data[k].length,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(height: 18.5.w);
+                            },
+                            itemBuilder: (cx, index) {
+                              dynamic e = data[k][index];
+                              return _getFormItem(e);
+                            }))
+                        .toList()),
+                // NestedScrollView(
+                //   headerSliverBuilder: (cx, flag) {
+                //     return [
+                //       SliverAppBar(
+                //         pinned: true,
+                //         backgroundColor: Colors.transparent,
+                //         toolbarHeight: 40.w,
+                //         title: TabBar(
+                //           controller: _tabController,
+                //           onTap: (index) {
+                //             setState(() {
+                //               formData = {};
+                //               formItems = data[[
+                //                 'label_mode_form',
+                //                 'expert_mode_form'
+                //               ][index]];
+                //             });
+                //           },
+                //           tabs: [
+                //             Tab(text: Utils.txt("bqms")),
+                //             Tab(text: Utils.txt("zjms")),
+                //           ],
+                //           dividerColor: Colors.transparent,
+                //           indicatorColor: Colors.transparent,
+                //           overlayColor:
+                //               WidgetStateProperty.all(Colors.transparent),
+                //           labelStyle: TextStyle(
+                //               fontSize: 14.w,
+                //               fontWeight: FontWeight.bold,
+                //               color: Color(0xFF40a5fe)),
+                //           unselectedLabelStyle: TextStyle(
+                //               fontSize: 14.w,
+                //               fontWeight: FontWeight.bold,
+                //               color: Colors.white.withOpacity(.8)),
+                //           physics: const BouncingScrollPhysics(),
+                //         ),
+                //       ),
+                //     ];
+                //   },
+                //   body: PullRefresh(
+                //     onRefresh: () {
+                //       return getData();
+                //     },
+                //     child: ListView.separated(
+                //         physics: const BouncingScrollPhysics(),
+                //         padding: EdgeInsets.symmetric(
+                //             horizontal: 15.w, vertical: 20.w),
+                //         itemCount: formItems.length,
+                //         separatorBuilder: (context, index) {
+                //           return SizedBox(height: 18.5.w);
+                //         },
+                //         itemBuilder: (cx, index) {
+                //           dynamic e = formItems[index];
+                //           return _getFormItem(e);
+                //         }),
+                //   ),
+                // ),
                 bottomNavigationBar: Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: 24.w, horizontal: 15.w),
@@ -287,7 +310,7 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
         if (e['layout_type'] != 2) ...[
           Text(e['title'],
               style: TextStyle(
-                  color: Colors.white.withOpacity(.8),
+                  color: StyleTheme.blak7716_06_Color,
                   fontSize: 15.w,
                   fontWeight: FontWeight.w600)),
           SizedBox(height: 7.w)
@@ -334,8 +357,9 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                   ? Container(
                       height: 30.w,
                       decoration: BoxDecoration(
-                        color:
-                            isSelected ? Color(0xff5da3f7) : Color(0xff1b1c2b),
+                        color: isSelected
+                            ? StyleTheme.blue52Color
+                            : StyleTheme.gray198Color,
                         borderRadius: BorderRadius.circular(2.w),
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -344,8 +368,11 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 14.w)),
+                          style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : StyleTheme.blak7716_06_Color,
+                              fontSize: 14.w)),
                     )
                   : form['layout_type'] == 1
                       ? Column(
@@ -356,7 +383,7 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                               decoration: BoxDecoration(
                                 border: isSelected
                                     ? Border.all(
-                                        color: Color(0xff5da3f7),
+                                        color: StyleTheme.blue52Color,
                                         width: 1.w,
                                       )
                                     : null,
@@ -373,8 +400,8 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                               tag['name'],
                               style: TextStyle(
                                   color: isSelected
-                                      ? Color(0xff5da3f7)
-                                      : Color(0xFFffffff).withOpacity(.7),
+                                      ? StyleTheme.blue52Color
+                                      : StyleTheme.blak7716_06_Color,
                                   fontSize: 13.w),
                             )
                           ],
@@ -384,13 +411,13 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                           children: [
                             Text(tag['name'],
                                 style: TextStyle(
-                                    color: Colors.white.withOpacity(.8),
+                                    color: StyleTheme.blak7716_06_Color,
                                     fontSize: 15.w,
                                     fontWeight: FontWeight.w600)),
                             SizedBox(height: 7.w),
                             Container(
                               decoration: BoxDecoration(
-                                color: Color(0xff1b1c2b),
+                                color: StyleTheme.gray198Color,
                                 borderRadius: BorderRadius.circular(4.w),
                               ),
                               child: TextField(
@@ -405,12 +432,12 @@ class __AiDrawPageState extends BaseWidgetState<_AiDrawPage>
                                 },
                                 keyboardType: TextInputType.multiline,
                                 style: TextStyle(
-                                    color: Color(0xFFffffff).withOpacity(.8),
+                                    color: Colors.black.withOpacity(.8),
                                     fontSize: 13.w),
                                 decoration: InputDecoration(
                                   hintText: '输入提示词，描述您想要的图像效果',
                                   hintStyle: TextStyle(
-                                      color: Color(0xFFffffff).withOpacity(.4),
+                                      color: Colors.black.withOpacity(.4),
                                       fontSize: 13.w),
                                   border: InputBorder.none,
                                   focusedBorder: InputBorder.none,
