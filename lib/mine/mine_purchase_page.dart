@@ -76,7 +76,7 @@ class _MinePurchasePageState extends BaseWidgetState<MinePurchasePage> {
                 PurchaseStatusPage(type: MediaType.video),
                 PurchaseStatusPage(type: MediaType.strip),
               ],
-              isCenter: true,
+              leftSideMargin: 20.w,
               selectStyle: StyleTheme.font_blue52_16_medium,
               defaultStyle: StyleTheme.font_black_7716_06_16,
             ),
