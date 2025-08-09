@@ -120,6 +120,28 @@ class __AIAreaPageState extends BaseWidgetState<_AIAreaPage> {
                         // isCenter: true,
                         type: GenCustomNavType.none,
                         leftSideMargin: 20.w,
+                        rightWidget: Container(
+                          height: StyleTheme.navHegiht,
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(left: StyleTheme.margin),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              if (_currentIndex >= 3) {
+                                _currentIndex = 0;
+                              }
+                              Utils.navTo(
+                                  context, "/minepurchasepage/$_currentIndex");
+                            },
+                            child: Container(
+                              width: 30.w,
+                              height: 25.w,
+                              alignment: Alignment.topCenter,
+                              child: Text(Utils.txt('record'),
+                                  style: StyleTheme.font_black_7716_07_14),
+                            ),
+                          ),
+                        ),
                         whichUseFor: 'AI',
                         inedxFunc: (p0) {
                           _currentIndex = p0;
@@ -155,29 +177,6 @@ class __AIAreaPageState extends BaseWidgetState<_AIAreaPage> {
                         selectStyle: StyleTheme.font_blue52_17_medium,
                         defaultStyle: StyleTheme.font_black_7716_06_16,
                       ),
-                      Container(
-                        height: StyleTheme.navHegiht,
-                        alignment: Alignment.centerRight,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: StyleTheme.margin),
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            if (_currentIndex >= 3) {
-                              _currentIndex = 0;
-                            }
-                            Utils.navTo(
-                                context, "/minepurchasepage/$_currentIndex");
-                          },
-                          child: Container(
-                            width: 30.w,
-                            height: 25.w,
-                            alignment: Alignment.topCenter,
-                            child: Text(Utils.txt('record'),
-                                style: StyleTheme.font_black_7716_07_14),
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
