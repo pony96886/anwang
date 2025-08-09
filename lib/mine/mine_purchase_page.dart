@@ -233,7 +233,7 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
       case MediaType.aiMagic:
         value = await reqDelMyAimagic(ids: delids.join(","));
         break;
-      case MediaType.aiMagic:
+      case MediaType.aiDraw:
         value = await reqDelMyAiDraw(ids: delids.join(","));
         break;
       default:
@@ -301,16 +301,27 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                       horizontal: StyleTheme.margin),
                                   gridDelegate:
                                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
+                                    crossAxisCount: 4,
                                   ),
                                   itemCount: array.length,
-                                  mainAxisSpacing: 10.w,
-                                  crossAxisSpacing: 10.w,
+                                  mainAxisSpacing: 4.w,
+                                  crossAxisSpacing: 8.w,
                                   itemBuilder: (cx, index) {
                                     dynamic e = array[index];
+                                    dynamic newE =
+                                        widget.type == MediaType.aiDraw
+                                            ? {
+                                                "status": e["status"],
+                                                "thumb":
+                                                    e['thumb'][0]['url'] ?? '',
+                                                "thumb_w": 85,
+                                                "thumb_h": 125,
+                                                "reason": e["reason"],
+                                              }
+                                            : e;
                                     return Utils.materialDealUI(
                                       context,
-                                      e,
+                                      newE,
                                       type: widget.type == MediaType.video ||
                                               widget.type == MediaType.aiMagic
                                           ? 1
@@ -368,6 +379,22 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                             widget.type == MediaType.aiMagic) {
                                           Utils.navTo(context,
                                               "/unplayerpage/${Uri.encodeComponent(e["cover"])}/${Uri.encodeComponent(e["thumb"])}");
+                                          return;
+                                        }
+                                        // ai绘画
+                                        if (x == 2 &&
+                                            widget.type == MediaType.aiDraw) {
+                                          Map picMap = {
+                                            'resources':
+                                                (e["thumb"] as List<dynamic>)
+                                                    .map((_e) => _e['url'])
+                                                    .toList(),
+                                            'index': 0
+                                          };
+                                          String url = EncDecrypt.encry(
+                                              jsonEncode(picMap));
+                                          Utils.navTo(
+                                              context, '/previewviewpage/$url');
                                           return;
                                         }
                                       },
