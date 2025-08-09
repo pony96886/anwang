@@ -300,12 +300,13 @@ class _PurchaseChildPageState extends State<PurchaseChildPage> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: StyleTheme.margin),
                                   gridDelegate:
-                                      const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
+                                      SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        widget.type == MediaType.aiDraw ? 4 : 3,
                                   ),
                                   itemCount: array.length,
-                                  mainAxisSpacing: 4.w,
-                                  crossAxisSpacing: 8.w,
+                                  mainAxisSpacing: 10.w,
+                                  crossAxisSpacing: 10.w,
                                   itemBuilder: (cx, index) {
                                     dynamic e = array[index];
                                     dynamic newE =
